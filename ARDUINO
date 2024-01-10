@@ -1,0 +1,151 @@
+#define BLYNK_TEMPLATE_ID "TMPL35deJ2tE_"
+#define BLYNK_TEMPLATE_NAME "TEMPERATURE AND HUMIDITY SENSOR"
+#define BLYNK_AUTH_TOKEN "oxKl1_YCqA4sWuzJK9Z5BomtlqpdgmEo"
+
+
+// #include <RainSense.h>
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+// #include<LightDependentResistor.h>
+
+
+char auth[] = "oxKl1_YCqA4sWuzJK9Z5BomtlqpdgmEo";  // Enter your Blynk auth token here
+char ssid[] = "Redmi 8A Dual";   // Enter your WiFi SSID here
+char pass[] = "pillalol";   // Enter your WiFi password here
+
+
+#define BUZZER_PIN D2
+// RAIN
+
+
+#define delayTime 10
+// RainSense rs = RainSense (A0);
+// unsigned long time = 0;
+int rainBool = 0;
+
+// FINAL DHT 
+#define DHTPIN D7   // Pin where the DHT11 is connected
+#define DHTTYPE DHT11   // DHT 11 sensor type
+
+DHT dht(DHTPIN, DHTTYPE);
+
+// FINAL LDR CODE
+const int ldr_pin = D8;
+const int led_pin = 2;
+
+// FINAL MQ2 GAS SENSOR
+//RAIN 
+int sensorValue = analogRead(A0);
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+  dht.begin();
+
+ //LDR CODE SETUP
+    pinMode(ldr_pin,INPUT);
+    pinMode(led_pin,OUTPUT);
+    Serial.begin(9600);
+
+    //MQ2 GAS SETUP
+  pinMode(BUZZER_PIN, OUTPUT);
+  Serial.begin(9600);
+
+   //RAIN SETUP
+//   Serial.begin (9600);
+//   if (rs.rain (40)) {
+//     Serial.println ("It's raining");
+//     rainBool = 1;
+//   } else {
+//     Serial.println ("It is not raining.");
+//   }
+
+}
+
+void loop() {
+  Blynk.run();
+
+
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  //float rain= RainSense.h();
+  // int light = photocell.getCurrentLux();
+
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Failed to read from DHT sensor!");
+    delay(2000);
+    // return;
+
+ //LDR LOOP
+   if( digitalRead( ldr_pin ) == 1){
+      digitalWrite( led_pin,HIGH);
+   }
+   else{
+      digitalWrite( led_pin , LOW);
+   }
+   
+   Serial.println( digitalRead( ldr_pin ));
+ delay(10);
+
+
+ // MQ2 BUZZER LOOP
+  // int sensorValue = analogRead(A0);
+
+  if (sensorValue > 150)
+  {
+    analogWrite(BUZZER_PIN, 50);
+  }
+  else
+  {
+
+    analogWrite(BUZZER_PIN, 0);    
+  }
+
+ delay(10);
+
+ 
+  //RAIN LOOP
+  // if (time> = 1000 * 60 * 5) {
+  //   time = 0;
+  //   rainBool = 0;
+  //   Serial.println ("It is not raining.");
+  // }
+  // if (rs.rain (40)) {
+  //   if (rainBool == 0) {
+  //     Serial.println ("It's raining");
+  //     rainBool = 1;
+  //   }
+  //   time = 0;
+  // } else if (rainBool == 1) {
+  //   time + = delayTime;
+  // }
+  // delay (delayTime);
+
+  // }
+  }
+
+
+int ldr=digitalRead(ldr);
+delay(2000);
+Serial.println(ldr);
+delay(2000);
+
+    Serial.println(sensorValue);
+    delay(2000);
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  
+  Serial.print(" °C, Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+  // Serial.println(ldr_pin);
+  // delay(2000);
+  Blynk.virtualWrite(V0, temperature);  // Send temperature value to Blynk App
+  Blynk.virtualWrite(V1, humidity);     // Send humidity value to Blynk App
+  Blynk.virtualWrite(V2, ldr_pin);     // Send humidity value to Blynk App
+  // Blynk.virtualWrite(V4,rain );     // Send humidity value to Blynk App
+  Blynk.virtualWrite(V5,sensorValue);     // Send humidity value to Blynk App
+  // Blynk.virtualWrite(V3,light);     // Send humidity value to Blynk App
+  delay(2000);   // Wait for 2 seconds
+}
