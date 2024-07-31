@@ -1,7 +1,7 @@
 # IOT_PROJECT
 IoT technologies to create a safer and more responsive mining environment, fostering increased efficiency and reducing the likelihood of accidents or health hazards for workers in the coal mining industry using Arduino Uno, ESP8266, and multiple sensors.
 This code is designed for an IoT (Internet of Things) project that involves monitoring temperature, humidity, light, gas, and rain conditions using various sensors. Let's break down the code and explain the purpose of each section.
-
+![20231204_001553](https://github.com/user-attachments/assets/d6348f33-bf6e-40fb-81e1-d700736accb1)
 Libraries and Definitions:
 
 The code includes necessary libraries like Blynk, ESP8266WiFi, and DHT for working with the Blynk app, connecting to Wi-Fi, and handling the DHT11 sensor, respectively.
